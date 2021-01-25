@@ -1,0 +1,4 @@
+include ':comp_remote'
+include ':sdk'
+include ':demo'
+rootProject.name = "IMSDK"

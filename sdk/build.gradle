@@ -1,0 +1,5 @@
+apply from:'../gradle_files/base.gradle'
+
+dependencies {
+//    api project(":comp_remote")
+}
