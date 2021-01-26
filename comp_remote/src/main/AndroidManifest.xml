@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.madchan.comp.remote">
+    package="com.madchan.imsdk.comp.remote">
+
+    <application>
+        <service
+            android:name=".service.MessageAccessService"
+            android:exported="true"
+            android:process=":remote" />
+    </application>
 
 </manifest>
