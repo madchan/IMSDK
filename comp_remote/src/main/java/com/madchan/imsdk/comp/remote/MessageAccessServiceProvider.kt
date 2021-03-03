@@ -14,6 +14,7 @@ import com.madchan.imsdk.comp.remote.listener.MessageReceiver
 import com.madchan.imsdk.comp.remote.service.MessageAccessService
 import com.madchan.imsdk.comp.remote.util.extract
 import com.madchan.imsdk.comp.remote.util.stuff
+import com.madchan.imsdk.comp.remote.work.WsServerDiscoverWork
 import com.madchan.imsdk.lib.objects.bean.vo.MessageVo
 
 object MessageAccessServiceProvider {
@@ -138,7 +139,11 @@ object MessageAccessServiceProvider {
 
         isBound = false
     }
-    
+
+    fun getWebSocketServer() {
+        WsServerDiscoverWork.enqueueAndObserve()
+    }
+
     fun sendMessage(messageVo: MessageVo) {
         messageCarrier?.sendMessage(extract(messageVo))
     }

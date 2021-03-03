@@ -5,16 +5,22 @@ import android.content.Intent
 import android.os.IBinder
 import android.os.RemoteCallbackList
 import android.util.Log
+import com.madchan.imsdk.comp.remote.constant.ConnectionStateMachine
+import com.madchan.imsdk.comp.remote.observer.ConnectionStateObserver
+import com.litalk.supportlib.lib.base.util.toJson
+import com.madchan.imsdk.comp.remote.websocket.WebSocketConnection
 import com.madchan.imsdk.comp.remote.MessageCarrier
 import com.madchan.imsdk.comp.remote.bean.Envelope
+import com.madchan.imsdk.comp.remote.exception.IllegalConnectionException
 import com.madchan.imsdk.comp.remote.listener.MessageReceiver
-import com.madchan.imsdk.comp.remote.util.extract
-import com.madchan.imsdk.comp.remote.util.stuff
-import com.madchan.imsdk.lib.objects.bean.vo.MessageVo
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import okio.ByteString
 
+/**
+ * 消息接入服务
+ * <p>
+ * 为了保证稳定性，需要和UI进程分离，分离后即使UI进程退出、Crash或者出现内存消耗过高等情况，仍不影响消息接入服务。
+ * 此服务负责收发消息，并和远程服务器保持长连接。UI进程可通过此服务发送消息到远程服务器，此服务收到远程服务器消息通知UI进程；
+ */
 class MessageAccessService: Service() {
 
     /** 专门用来管理多进程回调接口 */
@@ -23,7 +29,8 @@ class MessageAccessService: Service() {
     /** 根据MessageCarrier.aidl文件自动生成的Binder对象，需要返回给客户端 */
     private val messageCarrier: IBinder = object : MessageCarrier.Stub() {
         override fun sendMessage(envelope: Envelope) {
-            Log.d(TAG, "发送消息: " + stuff(envelope)?.content)
+            Log.d(TAG, "Send a message: " + envelope.messageVo?.content)
+            WebSocketConnection.send(ByteString.of(*envelope.toJson().toByteArray()))
         }
 
         override fun registerReceiveListener(messageReceiver: MessageReceiver?) {
@@ -40,7 +47,7 @@ class MessageAccessService: Service() {
 
         when(intent?.action) {
             // 初始化连接
-            ACTION_INITIALIZE_CONNECTION -> MockServer().listener()
+            ACTION_INITIALIZE_CONNECTION -> initWebSocketConnection()
         }
 
         // 如果系统在 onStartCommand() 返回后终止服务，则其会重建服务并调用 onStartCommand()，
@@ -52,26 +59,27 @@ class MessageAccessService: Service() {
         return messageCarrier
     }
 
+    private fun initWebSocketConnection() {
+        WebSocketConnection.connect()
+        WebSocketConnection.addConnectionStateObserver(object: ConnectionStateObserver {
+
+            override fun onChange(stateMachine: ConnectionStateMachine) {
+
+            }
+
+            override fun onFailure(exception: IllegalConnectionException) {
+            }
+
+            override fun onActive() {
+            }
+
+        })
+    }
+
     companion object {
         var TAG = MessageAccessService::class.java.simpleName
         /** 操作类型-初始化连接 */
         const val ACTION_INITIALIZE_CONNECTION = "INITIALIZE_CONNECTION"
     }
 
-    inner class MockServer {
-        fun listener() {
-            GlobalScope.launch {
-                while (true) {
-                    delay(5000)
-
-                    val listenerCount = remoteCallbackList.beginBroadcast()
-                    for (i in 0 until listenerCount) {
-                        val messageReceiver = remoteCallbackList.getBroadcastItem(i)
-                        messageReceiver?.onMessageReceived(extract(MessageVo("来自服务端的消息")))
-                    }
-                    remoteCallbackList.finishBroadcast()
-                }
-            }
-        }
-    }
 }

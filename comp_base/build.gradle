@@ -1,7 +1,7 @@
 apply from:'../gradle_files/base.gradle'
 
 dependencies {
-    def lib_base_version = "1.0.0-alpha01"
+    def lib_base_version = "1.0.0-alpha15"
     def lib_network_version = "1.0.0-alpha01"
 
     api "com.litalk.supportlib:lib_base:${lib_base_version}"
