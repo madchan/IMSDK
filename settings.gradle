@@ -3,4 +3,7 @@ include ':lib_objects'
 include ':comp_remote'
 include ':sdk'
 include ':demo'
+
+includeBuild ('lib_plugins')
+
 rootProject.name = "IMSDK"

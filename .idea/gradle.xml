@@ -4,6 +4,17 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/lib_plugins" name="lib_plugins">
+                <projects>
+                  <project path="$PROJECT_DIR$/lib_plugins" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
         <option name="testRunner" value="PLATFORM" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -15,6 +26,7 @@
             <option value="$PROJECT_DIR$/comp_remote" />
             <option value="$PROJECT_DIR$/demo" />
             <option value="$PROJECT_DIR$/lib_objects" />
+            <option value="$PROJECT_DIR$/lib_plugins" />
             <option value="$PROJECT_DIR$/sdk" />
           </set>
         </option>
