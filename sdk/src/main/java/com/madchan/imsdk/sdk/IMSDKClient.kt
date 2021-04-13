@@ -1,11 +1,12 @@
 package com.madchan.imsdk.sdk
 
 import android.content.Context
-import com.madchan.imsdk.comp.remote.MessageAccessServiceProvider
+import com.madchan.imsdk.comp.base.SDKBase
 
-object IMSDKClient {
+object IMSDKClient{
 
     fun init(context: Context) {
-        MessageAccessServiceProvider.setupService(context)
+        SDKBase.dependentContext = context.applicationContext
     }
+
 }
