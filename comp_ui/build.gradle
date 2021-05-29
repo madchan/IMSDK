@@ -1,0 +1,11 @@
+import com.madchan.imsdk.lib.plugins.Deps
+
+plugins {
+    id "com.madchan.imsdk.lib.plugins"
+}
+
+apply from:'../gradle_files/base.gradle'
+
+dependencies {
+    api Deps.LIB_BASE
+}

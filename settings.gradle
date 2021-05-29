@@ -1,6 +1,7 @@
-include ':comp_base'
 include ':lib_objects'
+include ':comp_base'
 include ':comp_remote'
+include ':comp_ui'
 include ':sdk'
 include ':demo'
 
