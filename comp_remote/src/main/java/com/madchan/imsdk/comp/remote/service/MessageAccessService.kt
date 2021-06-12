@@ -5,14 +5,14 @@ import android.content.Intent
 import android.os.IBinder
 import android.os.RemoteCallbackList
 import android.util.Log
-import com.madchan.imsdk.comp.remote.constant.ConnectionStateMachine
-import com.madchan.imsdk.comp.remote.observer.ConnectionStateObserver
-import com.litalk.supportlib.lib.base.util.toJson
-import com.madchan.imsdk.comp.remote.websocket.WebSocketConnection
 import com.madchan.imsdk.comp.remote.MessageCarrier
 import com.madchan.imsdk.comp.remote.bean.Envelope
+import com.madchan.imsdk.comp.remote.constant.ConnectionStateMachine
 import com.madchan.imsdk.comp.remote.exception.IllegalConnectionException
 import com.madchan.imsdk.comp.remote.listener.MessageReceiver
+import com.madchan.imsdk.comp.remote.observer.ConnectionStateObserver
+import com.madchan.imsdk.comp.remote.util.EnvelopeHelper
+import com.madchan.imsdk.comp.remote.websocket.WebSocketConnection
 import okio.ByteString
 
 /**
@@ -30,7 +30,10 @@ class MessageAccessService: Service() {
     private val messageCarrier: IBinder = object : MessageCarrier.Stub() {
         override fun sendMessage(envelope: Envelope) {
             Log.d(TAG, "Send a message: " + envelope.messageVo?.content)
-            WebSocketConnection.send(ByteString.of(*envelope.toJson().toByteArray()))
+
+            EnvelopeHelper.stuff(envelope)?.let {
+                WebSocketConnection.send(ByteString.of(*it.toByteArray()))
+            }
         }
 
         override fun registerReceiveListener(messageReceiver: MessageReceiver?) {

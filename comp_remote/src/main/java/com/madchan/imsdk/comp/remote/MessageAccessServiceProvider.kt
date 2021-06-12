@@ -12,9 +12,8 @@ import com.madchan.imsdk.comp.base.util.ProcessUtil
 import com.madchan.imsdk.comp.remote.bean.Envelope
 import com.madchan.imsdk.comp.remote.listener.MessageReceiver
 import com.madchan.imsdk.comp.remote.service.MessageAccessService
-import com.madchan.imsdk.comp.remote.util.extract
-import com.madchan.imsdk.comp.remote.util.stuff
-import com.madchan.imsdk.comp.remote.work.WsServerDiscoverWork
+import com.madchan.imsdk.comp.remote.util.EnvelopeHelper
+import com.madchan.imsdk.comp.remote.work.WebSocketServerDiscoverWork
 import com.madchan.imsdk.lib.objects.bean.vo.MessageVo
 
 object MessageAccessServiceProvider {
@@ -98,7 +97,7 @@ object MessageAccessServiceProvider {
     /** 接收远程服务器消息的接口 */
     private val messageReceiver = object : MessageReceiver.Stub() {
         override fun onMessageReceived(envelope: Envelope) {
-            Log.d(TAG, "收取消息: ${stuff(envelope)?.content}")
+            Log.d(TAG, "收取消息: ${envelope?.messageVo?.content}")
         }
     }
 
@@ -141,11 +140,13 @@ object MessageAccessServiceProvider {
     }
 
     fun getWebSocketServer() {
-        WsServerDiscoverWork.enqueueAndObserve()
+        WebSocketServerDiscoverWork.enqueueAndObserve()
     }
 
     fun sendMessage(messageVo: MessageVo) {
-        messageCarrier?.sendMessage(extract(messageVo))
+        val envelope = Envelope()
+        envelope.messageVo = messageVo
+        messageCarrier?.sendMessage(envelope)
     }
 
 }

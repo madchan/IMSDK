@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 
         val editText = findViewById<EditText>(R.id.editText)
         findViewById<Button>(R.id.button).setOnClickListener {
-            IMMessageSender.sendMessage(IMMessageCreator.createTextMessage(editText.text.toString()))
+            IMMessageSender.sendMessage(IMMessageCreator.createTextMessage("001", "002", editText.text.toString()))
         }
     }
 }

@@ -12,11 +12,11 @@ import kotlinx.coroutines.withContext
 /**
  * WebSocket服务器地址发现Work
  */
-class WsServerDiscoverWork(context: Context, workerParameters: WorkerParameters) : CoroutineWorker(context, workerParameters) {
+class WebSocketServerDiscoverWork(context: Context, workerParameters: WorkerParameters) : CoroutineWorker(context, workerParameters) {
 
     companion object {
         fun enqueueAndObserve() {
-            val request = OneTimeWorkRequestBuilder<WsServerDiscoverWork>()
+            val request = OneTimeWorkRequestBuilder<WebSocketServerDiscoverWork>()
                 .build()
             WorkManager.getInstance(SDKBase.dependentContext).enqueue(request)
 

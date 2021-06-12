@@ -12,7 +12,8 @@ import com.madchan.imsdk.comp.base.SDKBase
 import com.madchan.imsdk.comp.remote.bean.Envelope
 import com.madchan.imsdk.comp.remote.exception.IllegalConnectionException
 import com.madchan.imsdk.comp.remote.service.MessageAccessService
-import com.madchan.imsdk.comp.remote.util.stuff
+import com.madchan.imsdk.comp.remote.util.EnvelopeHelper
+import com.madchan.imsdk.lib.objects.bean.dto.MessageDTO
 import kotlinx.coroutines.runBlocking
 import okhttp3.*
 import okio.ByteString
@@ -101,7 +102,7 @@ object WebSocketConnection : WebSocketListener() {
         super.onMessage(webSocket, bytes)
 
         Log.d(MessageAccessService.TAG, "onMessage: ")
-        Log.d(MessageAccessService.TAG, "Received a message : " + stuff(String(bytes.toByteArray()).fromJson(Envelope::class.java)!!)?.content)
+        Log.d(MessageAccessService.TAG, "Received a message : " + EnvelopeHelper.extract(MessageDTO.Message.parseFrom(bytes.toByteArray()))?.messageVo?.content)
 
         stateMachineSubscriber.active()
     }
