@@ -8,4 +8,8 @@ apply from:'../gradle_files/base.gradle'
 
 dependencies {
     api Deps.LIB_BASE
+    api project(":lib_objects")
+
+    //图片加载
+    api 'com.github.bumptech.glide:glide:4.11.0'
 }
