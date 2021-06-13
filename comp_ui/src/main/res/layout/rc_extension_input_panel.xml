@@ -92,6 +92,8 @@
             android:layout_height="34dp"
             android:background="@drawable/rc_send_background"
             android:text="@string/rc_send"
+            android:gravity="center"
+            tools:visibility="visible"
             android:textColor="@color/rc_white_color"
             android:textSize="@dimen/rc_font_text_third_size"
             android:visibility="gone"

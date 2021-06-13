@@ -3,6 +3,6 @@
     package="com.madchan.imsdk.comp.ui">
 
     <application>
-        <activity android:name=".activity.RongConversationActivity"/>
+        <activity android:name=".rongcloud.activity.RongConversationActivity"/>
     </application>
 </manifest>

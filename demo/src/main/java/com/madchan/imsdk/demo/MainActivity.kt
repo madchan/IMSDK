@@ -3,13 +3,9 @@ package com.madchan.imsdk.demo
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
 import com.madchan.imsdk.comp.remote.MessageAccessServiceProvider
-import com.madchan.imsdk.comp.ui.activity.RongConversationActivity
-import com.madchan.imsdk.sdk.IMMessageCreator
-import com.madchan.imsdk.sdk.IMMessageSender
-import com.madchan.imsdk.sdk.IMSDKClient
+import com.madchan.imsdk.comp.ui.rongcloud.util.RouteUtils
+import com.madchan.imsdk.demo.impl.ConversationActivityImpl
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,6 +14,8 @@ class MainActivity : AppCompatActivity() {
 
         MessageAccessServiceProvider.getWebSocketServer()
 
-        startActivity(Intent(this, RongConversationActivity::class.java))
+        val intent = Intent(this, ConversationActivityImpl::class.java);
+        intent.putExtra(RouteUtils.TARGET_ID, "002")
+        startActivity(intent)
     }
 }
