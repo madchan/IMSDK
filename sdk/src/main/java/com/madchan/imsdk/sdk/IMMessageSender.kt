@@ -1,12 +1,12 @@
 package com.madchan.imsdk.sdk
 
 import com.madchan.imsdk.comp.remote.MessageAccessServiceProvider
-import com.madchan.imsdk.lib.objects.bean.vo.MessageVo
+import com.madchan.imsdk.lib.objects.bean.vo.MessageVO
 
 object IMMessageSender {
 
-    fun sendMessage(messageVo: MessageVo) {
-        MessageAccessServiceProvider.sendMessage(messageVo)
+    fun sendMessage(messageVO: MessageVO) {
+        MessageAccessServiceProvider.sendMessage(messageVO)
     }
 
 }

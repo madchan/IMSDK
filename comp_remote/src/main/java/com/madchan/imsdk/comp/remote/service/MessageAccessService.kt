@@ -29,7 +29,7 @@ class MessageAccessService: Service() {
     /** 根据MessageCarrier.aidl文件自动生成的Binder对象，需要返回给客户端 */
     private val messageCarrier: IBinder = object : MessageCarrier.Stub() {
         override fun sendMessage(envelope: Envelope) {
-            Log.d(TAG, "Send a message: " + envelope.messageVo?.content)
+            Log.d(TAG, "Send a message: " + envelope.messageVO?.content)
 
             EnvelopeHelper.stuff(envelope)?.let {
                 WebSocketConnection.send(ByteString.of(*it.toByteArray()))

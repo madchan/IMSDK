@@ -3,4 +3,8 @@ apply from:'../gradle_files/base.gradle'
 dependencies {
     implementation project(":lib_objects")
     implementation project(":comp_base")
+
+    implementation "org.mapstruct:mapstruct:1.4.2.Final"
+//    annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"
+    kapt("org.mapstruct:mapstruct-processor:1.4.2.Final")
 }

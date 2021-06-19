@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 
 import androidx.fragment.app.Fragment;
 
-import com.madchan.imsdk.lib.objects.bean.vo.MessageVo;
+import com.madchan.imsdk.lib.objects.bean.vo.MessageVO;
 
 /**
  * Created by zwfang on 2018/3/29.
@@ -32,5 +32,5 @@ public interface IClickActions {
      * @param message 消息
      * @return 返回true，表示显示
      */
-    boolean filter(MessageVo message);
+    boolean filter(MessageVO message);
 }

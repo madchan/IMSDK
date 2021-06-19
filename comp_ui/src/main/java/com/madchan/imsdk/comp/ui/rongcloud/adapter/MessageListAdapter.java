@@ -5,26 +5,26 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListUpdateCallback;
 
 import com.madchan.imsdk.comp.ui.rongcloud.provider.TextMessageItemProvider;
-import com.madchan.imsdk.lib.objects.bean.vo.MessageVo;
+import com.madchan.imsdk.lib.objects.bean.vo.MessageVO;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageListAdapter extends BaseAdapter<MessageVo> {
+public class MessageListAdapter extends BaseAdapter<MessageVO> {
 
-    public MessageListAdapter(IViewProviderListener<MessageVo> listener) {
+    public MessageListAdapter(IViewProviderListener<MessageVO> listener) {
         super(listener, getMessageListProvider());
     }
 
-    private static ProviderManager<MessageVo> getMessageListProvider() {
-        ProviderManager<MessageVo> messageListProvider = new ProviderManager<>();
+    private static ProviderManager<MessageVO> getMessageListProvider() {
+        ProviderManager<MessageVO> messageListProvider = new ProviderManager<>();
         messageListProvider.setDefaultProvider(new DefaultProvider());
         messageListProvider.addProvider(new TextMessageItemProvider());
         return  messageListProvider;
     }
 
     @Override
-    public void setDataCollection(List<MessageVo> data) {
+    public void setDataCollection(List<MessageVO> data) {
         if (data == null) {
             data = new ArrayList<>();
         }
@@ -65,7 +65,7 @@ public class MessageListAdapter extends BaseAdapter<MessageVo> {
 
 
     private class MessageDiffCallBack extends DiffUtil.Callback {
-        private List<MessageVo> newList;
+        private List<MessageVO> newList;
 
         @Override
         public int getOldListSize() {
@@ -99,7 +99,7 @@ public class MessageListAdapter extends BaseAdapter<MessageVo> {
             return true;
         }
 
-        public void setNewList(List<MessageVo> newList) {
+        public void setNewList(List<MessageVO> newList) {
             this.newList = newList;
         }
     }

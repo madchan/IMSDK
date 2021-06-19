@@ -13,12 +13,12 @@ import com.madchan.imsdk.comp.ui.R;
 import com.madchan.imsdk.comp.ui.rongcloud.adapter.IViewProviderListener;
 import com.madchan.imsdk.comp.ui.rongcloud.adapter.ViewHolder;
 import com.madchan.imsdk.lib.objects.bean.dto.MessageDTO;
-import com.madchan.imsdk.lib.objects.bean.vo.MessageVo;
+import com.madchan.imsdk.lib.objects.bean.vo.MessageVO;
 
 import java.util.List;
 import java.util.Locale;
 
-public class TextMessageItemProvider extends BaseMessageItemProvider<MessageVo> {
+public class TextMessageItemProvider extends BaseMessageItemProvider<MessageVO> {
 
     public TextMessageItemProvider() {
         mConfig.showReadState = true;
@@ -31,7 +31,7 @@ public class TextMessageItemProvider extends BaseMessageItemProvider<MessageVo> 
     }
 
     @Override
-    protected void bindMessageContentViewHolder(final ViewHolder holder, ViewHolder parentHolder, MessageVo message, final MessageVo messageVo, int position, List<MessageVo> list, IViewProviderListener<MessageVo> listener) {
+    protected void bindMessageContentViewHolder(final ViewHolder holder, ViewHolder parentHolder, MessageVO message, final MessageVO messageVo, int position, List<MessageVO> list, IViewProviderListener<MessageVO> listener) {
         final TextView view = holder.getView(R.id.rc_text);
 
         if (TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == LayoutDirection.RTL) {
@@ -96,13 +96,13 @@ public class TextMessageItemProvider extends BaseMessageItemProvider<MessageVo> 
     }
 
     @Override
-    protected boolean onItemClick(ViewHolder holder, MessageVo message, MessageVo messageVo, int position, List<MessageVo> list, IViewProviderListener<MessageVo> listener) {
+    protected boolean onItemClick(ViewHolder holder, MessageVO message, MessageVO messageVo, int position, List<MessageVO> list, IViewProviderListener<MessageVO> listener) {
         return false;
     }
 
 
     @Override
-    protected boolean isMessageViewType(MessageVo messageVo) {
+    protected boolean isMessageViewType(MessageVO messageVo) {
 //        return messageContent instanceof TextMessage && !messageContent.isDestruct();
         return MessageDTO.Message.MessageType.MESSAGE_TYPE_TEXT_VALUE == messageVo.getMessageType();
     }

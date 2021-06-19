@@ -36,7 +36,7 @@ import com.madchan.imsdk.comp.ui.rongcloud.widget.refresh.SmartRefreshLayout;
 import com.madchan.imsdk.comp.ui.rongcloud.widget.refresh.listener.OnLoadMoreListener;
 import com.madchan.imsdk.comp.ui.rongcloud.widget.refresh.listener.OnRefreshListener;
 import com.madchan.imsdk.comp.ui.rongcloud.widget.refresh.wrapper.RongRefreshHeader;
-import com.madchan.imsdk.lib.objects.bean.vo.MessageVo;
+import com.madchan.imsdk.lib.objects.bean.vo.MessageVO;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ import java.util.List;
 /**
  * @author lvz
  */
-public abstract class ConversationFragment extends Fragment implements OnRefreshListener, View.OnClickListener, OnLoadMoreListener, IViewProviderListener<MessageVo> {
+public abstract class ConversationFragment extends Fragment implements OnRefreshListener, View.OnClickListener, OnLoadMoreListener, IViewProviderListener<MessageVO> {
     private final String TAG = ConversationFragment.class.getSimpleName();
     private static final int REQUEST_MSG_DOWNLOAD_PERMISSION = 1000;
     protected SmartRefreshLayout mRefreshLayout;
@@ -292,12 +292,12 @@ public abstract class ConversationFragment extends Fragment implements OnRefresh
     }
 
     @Override
-    public void onViewClick(int clickType, MessageVo data) {
+    public void onViewClick(int clickType, MessageVO data) {
 //        mMessageViewModel.onViewClick(clickType, data);
     }
 
     @Override
-    public boolean onViewLongClick(int clickType, MessageVo data) {
+    public boolean onViewLongClick(int clickType, MessageVO data) {
 //        return mMessageViewModel.onViewLongClick(clickType, data);
         return false;
     }
@@ -344,9 +344,9 @@ public abstract class ConversationFragment extends Fragment implements OnRefresh
         mNotificationContainer.setVisibility(View.VISIBLE);
     }
 
-    Observer<List<MessageVo>> mListObserver = new Observer<List<MessageVo>>() {
+    Observer<List<MessageVO>> mListObserver = new Observer<List<MessageVO>>() {
         @Override
-        public void onChanged(List<MessageVo> uiMessages) {
+        public void onChanged(List<MessageVO> uiMessages) {
             refreshList(uiMessages);
         }
     };
@@ -482,7 +482,7 @@ public abstract class ConversationFragment extends Fragment implements OnRefresh
 //        }
 //    };
 
-    private void refreshList(final List<MessageVo> data) {
+    private void refreshList(final List<MessageVO> data) {
         if (mList.isComputingLayout()) {
             mList.post(new Runnable() {
                 @Override

@@ -7,9 +7,7 @@ import com.madchan.imsdk.comp.remote.constant.WebSocketStatusCode
 import com.madchan.imsdk.comp.remote.observer.ConnectionStateMachineSubscriber
 import com.madchan.imsdk.comp.remote.observer.ConnectionStateObserver
 import com.litalk.supportlib.lib.base.util.DataStoreUtil
-import com.litalk.supportlib.lib.base.util.fromJson
 import com.madchan.imsdk.comp.base.SDKBase
-import com.madchan.imsdk.comp.remote.bean.Envelope
 import com.madchan.imsdk.comp.remote.exception.IllegalConnectionException
 import com.madchan.imsdk.comp.remote.service.MessageAccessService
 import com.madchan.imsdk.comp.remote.util.EnvelopeHelper
@@ -102,7 +100,7 @@ object WebSocketConnection : WebSocketListener() {
         super.onMessage(webSocket, bytes)
 
         Log.d(MessageAccessService.TAG, "onMessage: ")
-        Log.d(MessageAccessService.TAG, "Received a message : " + EnvelopeHelper.extract(MessageDTO.Message.parseFrom(bytes.toByteArray()))?.messageVo?.content)
+        Log.d(MessageAccessService.TAG, "Received a message : " + EnvelopeHelper.extract(MessageDTO.Message.parseFrom(bytes.toByteArray()))?.messageVO?.content)
 
         stateMachineSubscriber.active()
     }

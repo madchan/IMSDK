@@ -12,11 +12,11 @@ import android.widget.LinearLayout;
 import com.madchan.imsdk.comp.ui.R;
 import com.madchan.imsdk.comp.ui.rongcloud.adapter.IViewProviderListener;
 import com.madchan.imsdk.comp.ui.rongcloud.adapter.ViewHolder;
-import com.madchan.imsdk.lib.objects.bean.vo.MessageVo;
+import com.madchan.imsdk.lib.objects.bean.vo.MessageVO;
 
 import java.util.List;
 
-public abstract class BaseMessageItemProvider<T extends MessageVo> implements IMessageProvider {
+public abstract class BaseMessageItemProvider<T extends MessageVO> implements IMessageProvider {
     private static final String TAG = "BaseMessageItemProvider";
     protected MessageItemProviderConfig mConfig = new MessageItemProviderConfig();
 
@@ -35,25 +35,25 @@ public abstract class BaseMessageItemProvider<T extends MessageVo> implements IM
      * @param holder       ViewHolder
      * @param parentHolder 父布局的 ViewHolder
      * @param t            此展示模板对应的消息
-     * @param messageVo    {@link MessageVo}
+     * @param messageVo    {@link MessageVO}
      * @param position     消息位置
      * @param list         列表
      * @param listener     ViewModel 的点击事件监听器。如果某个子 view 的点击事件需要 ViewModel 处理，可通过此监听器回调。
      */
-    protected abstract void bindMessageContentViewHolder(ViewHolder holder, ViewHolder parentHolder, T t, MessageVo messageVo, int position, List<MessageVo> list, IViewProviderListener<MessageVo> listener);
+    protected abstract void bindMessageContentViewHolder(ViewHolder holder, ViewHolder parentHolder, T t, MessageVO messageVo, int position, List<MessageVO> list, IViewProviderListener<MessageVO> listener);
 
     /**
      * @param holder    ViewHolder
      * @param t         自定义消息
-     * @param messageVo {@link MessageVo}
+     * @param messageVo {@link MessageVO}
      * @param position  位置
      * @param list      列表数据
      * @param listener  ViewModel 的点击事件监听器。如果某个子 view 的点击事件需要 ViewModel 处理，可通过此监听器回调。
      * @return 点击事件是否被消费
      */
-    protected abstract boolean onItemClick(ViewHolder holder, T t, MessageVo messageVo, int position, List<MessageVo> list, IViewProviderListener<MessageVo> listener);
+    protected abstract boolean onItemClick(ViewHolder holder, T t, MessageVO messageVo, int position, List<MessageVO> list, IViewProviderListener<MessageVO> listener);
 
-    protected boolean onItemLongClick(ViewHolder holder, T t, MessageVo messageVo, int position, List<MessageVo> list, IViewProviderListener<MessageVo> listener) {
+    protected boolean onItemLongClick(ViewHolder holder, T t, MessageVO messageVo, int position, List<MessageVO> list, IViewProviderListener<MessageVO> listener) {
         return false;
     }
 
@@ -64,7 +64,7 @@ public abstract class BaseMessageItemProvider<T extends MessageVo> implements IM
      * @param messageVo 消息内容
      * @return 本模板是否处理。
      */
-    protected abstract boolean isMessageViewType(MessageVo messageVo);
+    protected abstract boolean isMessageViewType(MessageVO messageVo);
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -80,7 +80,7 @@ public abstract class BaseMessageItemProvider<T extends MessageVo> implements IM
     }
 
     @Override
-    public void bindViewHolder(final ViewHolder holder, final MessageVo messageVo, final int position, final List<MessageVo> list, final IViewProviderListener<MessageVo> listener) {
+    public void bindViewHolder(final ViewHolder holder, final MessageVO messageVo, final int position, final List<MessageVO> list, final IViewProviderListener<MessageVO> listener) {
         if (messageVo != null && listener != null) {
 //            Message message = messageVo.getMessage();
 //            holder.setVisible(R.id.rc_selected, messageVo.isEdit());
@@ -214,7 +214,7 @@ public abstract class BaseMessageItemProvider<T extends MessageVo> implements IM
 //    }
 
 
-    private void initContent(final ViewHolder holder, boolean isSender, final MessageVo messageVo, final int position, final IViewProviderListener<MessageVo> listener, final List<MessageVo> list) {
+    private void initContent(final ViewHolder holder, boolean isSender, final MessageVO messageVo, final int position, final IViewProviderListener<MessageVO> listener, final List<MessageVO> list) {
         if (mConfig.showContentBubble) {
             holder.setBackgroundRes(R.id.rc_content, isSender ? R.drawable.rc_ic_bubble_right : R.drawable.rc_ic_bubble_left);
         } else {
@@ -381,7 +381,7 @@ public abstract class BaseMessageItemProvider<T extends MessageVo> implements IM
 
 
     @Override
-    public boolean isItemViewType(MessageVo item) {
+    public boolean isItemViewType(MessageVO item) {
         return isMessageViewType(item);
     }
 
