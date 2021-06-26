@@ -1,0 +1,19 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+actor 客户端
+
+客户端 -> 展示层 : edit(content)
+展示层 -> 展示层 : createVo(content): MessageVO
+展示层 -> 展示层 : voToPo(messageVO): MessagePO
+展示层 -> 持久层 : save(messagePO)
+展示层 -> 展示层 : voToDto(messageVO): MessageDTO
+展示层 -> 传输层 : send(messageDTO)
+传输层 -> 服务端 : transfer(messageDTO)
+服务端 -> 传输层 : receive(messageDTO)
+传输层 -> 传输层 : dtoToPo(messageDTO): MessagePO
+传输层 -> 持久层 : save(messagePO)
+持久层 -> 持久层 : poToVo(messagePO): MessageVO
+持久层 -> 展示层 : display(messageVO)
+@enduml
