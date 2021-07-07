@@ -30,7 +30,8 @@ class WebSocketServerDiscoverWork(context: Context, workerParameters: WorkerPara
     }
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-        val mockServer = "wss://echo.websocket.org"
+//        val mockServer = "wss://echo.websocket.org"
+        val mockServer = "ws://172.16.84.82:8080/websocket"
         DataStoreUtil.writeString(SDKBase.dependentContext, RemoteDataStoreKey.WEB_SOCKET_SERVER_URL, mockServer)
         Result.success()
     }
