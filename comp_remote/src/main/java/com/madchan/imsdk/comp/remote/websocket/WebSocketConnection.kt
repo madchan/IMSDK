@@ -7,8 +7,9 @@ import com.madchan.imsdk.comp.remote.constant.WebSocketStatusCode
 import com.madchan.imsdk.comp.remote.observer.ConnectionStateMachineSubscriber
 import com.madchan.imsdk.comp.remote.observer.ConnectionStateObserver
 import com.litalk.supportlib.lib.base.util.DataStoreUtil
-import com.madchan.imsdk.comp.base.SDKBase
+import com.madchan.imsdk.comp.base.SDKCache
 import com.madchan.imsdk.comp.remote.exception.IllegalConnectionException
+import com.madchan.imsdk.comp.remote.pipe.IncomingMessagePipe
 import com.madchan.imsdk.comp.remote.service.MessageAccessService
 import com.madchan.imsdk.comp.remote.util.EnvelopeHelper
 import com.madchan.imsdk.lib.objects.bean.dto.MessageDTO
@@ -21,7 +22,7 @@ import java.util.concurrent.TimeUnit
  * # WebSocket连接单例
  * 用于建立、断开连接，并监听连接的状态
  */
-object WebSocketConnection : WebSocketListener() {
+class WebSocketConnection : WebSocketListener() {
 
     var TAG: String = this.javaClass.simpleName
 
@@ -38,6 +39,8 @@ object WebSocketConnection : WebSocketListener() {
     /** WebSocket连接状态机订阅者 */
     private var stateMachineSubscriber = ConnectionStateMachineSubscriber()
 
+    val incomingMessagePipe = IncomingMessagePipe()
+
     /**
      * ## 建立连接
      * 请注意：调用newWebSocket方法将创建新的WebSocket实例并立即返回，并启动异步过程以连接Socket。
@@ -50,7 +53,7 @@ object WebSocketConnection : WebSocketListener() {
 
         runBlocking {
             serverUrl = DataStoreUtil.readString(
-                SDKBase.dependentContext,
+                SDKCache.dependentContext,
                 RemoteDataStoreKey.WEB_SOCKET_SERVER_URL
             )
         }
@@ -102,6 +105,9 @@ object WebSocketConnection : WebSocketListener() {
         Log.d(MessageAccessService.TAG, "onMessage: ")
         Log.d(MessageAccessService.TAG, "Received a message : " + EnvelopeHelper.extract(MessageDTO.Message.parseFrom(bytes.toByteArray()))?.messageVO?.content)
 
+        val messageDTO = MessageDTO.Message.parseFrom(bytes.toByteArray())
+        incomingMessagePipe.enqueueMessage(messageDTO)
+
         stateMachineSubscriber.active()
     }
 
@@ -141,4 +147,5 @@ object WebSocketConnection : WebSocketListener() {
     fun send(message: ByteString) {
         webSocketClient?.send(message)
     }
+
 }

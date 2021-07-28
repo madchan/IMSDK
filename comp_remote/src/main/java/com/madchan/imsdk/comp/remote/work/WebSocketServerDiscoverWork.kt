@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.*
 import com.madchan.imsdk.comp.remote.constant.RemoteDataStoreKey
 import com.litalk.supportlib.lib.base.util.DataStoreUtil
-import com.madchan.imsdk.comp.base.SDKBase
+import com.madchan.imsdk.comp.base.SDKCache
 import com.madchan.imsdk.comp.remote.MessageAccessServiceProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -18,12 +18,12 @@ class WebSocketServerDiscoverWork(context: Context, workerParameters: WorkerPara
         fun enqueueAndObserve() {
             val request = OneTimeWorkRequestBuilder<WebSocketServerDiscoverWork>()
                 .build()
-            WorkManager.getInstance(SDKBase.dependentContext).enqueue(request)
+            WorkManager.getInstance(SDKCache.context).enqueue(request)
 
-            WorkManager.getInstance(SDKBase.dependentContext).getWorkInfoByIdLiveData(request.id)
+            WorkManager.getInstance(SDKCache.context).getWorkInfoByIdLiveData(request.id)
                 .observeForever {
                     when(it.state) {
-                        WorkInfo.State.SUCCEEDED -> MessageAccessServiceProvider.setupService(SDKBase.dependentContext)
+                        WorkInfo.State.SUCCEEDED -> MessageAccessServiceProvider.setupService(SDKCache.context)
                     }
                 }
         }
@@ -32,7 +32,7 @@ class WebSocketServerDiscoverWork(context: Context, workerParameters: WorkerPara
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
 //        val mockServer = "wss://echo.websocket.org"
         val mockServer = "ws://172.16.84.82:8080/websocket"
-        DataStoreUtil.writeString(SDKBase.dependentContext, RemoteDataStoreKey.WEB_SOCKET_SERVER_URL, mockServer)
+        DataStoreUtil.writeString(SDKCache.context, RemoteDataStoreKey.WEB_SOCKET_SERVER_URL, mockServer)
         Result.success()
     }
 

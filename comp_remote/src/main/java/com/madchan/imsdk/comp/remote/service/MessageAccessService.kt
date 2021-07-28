@@ -11,6 +11,7 @@ import com.madchan.imsdk.comp.remote.constant.ConnectionStateMachine
 import com.madchan.imsdk.comp.remote.exception.IllegalConnectionException
 import com.madchan.imsdk.comp.remote.listener.MessageReceiver
 import com.madchan.imsdk.comp.remote.observer.ConnectionStateObserver
+import com.madchan.imsdk.comp.remote.pipe.MessageRetrievalThread
 import com.madchan.imsdk.comp.remote.util.EnvelopeHelper
 import com.madchan.imsdk.comp.remote.websocket.WebSocketConnection
 import okio.ByteString
@@ -23,6 +24,11 @@ import okio.ByteString
  */
 class MessageAccessService: Service() {
 
+    /** WebSocket连接 */
+    private val webSocketConnection = WebSocketConnection()
+    /** 消息检索线程 */
+    private var messageRetrievalThread: MessageRetrievalThread? = null
+
     /** 专门用来管理多进程回调接口 */
     private val remoteCallbackList = RemoteCallbackList<MessageReceiver>()
 
@@ -31,9 +37,8 @@ class MessageAccessService: Service() {
         override fun sendMessage(envelope: Envelope) {
             Log.d(TAG, "Send a message: " + envelope.messageVO?.content)
 
-            EnvelopeHelper.stuff(envelope)?.let {
-                WebSocketConnection.send(ByteString.of(*it.toByteArray()))
-            }
+            val messageDTO = EnvelopeHelper.stuff(envelope)
+            messageDTO?.let { webSocketConnection.send(ByteString.of(*it.toByteArray())) }
         }
 
         override fun registerReceiveListener(messageReceiver: MessageReceiver?) {
@@ -63,11 +68,18 @@ class MessageAccessService: Service() {
     }
 
     private fun initWebSocketConnection() {
-        WebSocketConnection.connect()
-        WebSocketConnection.addConnectionStateObserver(object: ConnectionStateObserver {
+        webSocketConnection.connect()
+        webSocketConnection.addConnectionStateObserver(object : ConnectionStateObserver {
 
             override fun onChange(stateMachine: ConnectionStateMachine) {
-
+                when (stateMachine) {
+                    ConnectionStateMachine.CONNECTED -> {
+                        if (messageRetrievalThread == null) {
+                            messageRetrievalThread = initMessageRetrievalThread()
+                            messageRetrievalThread?.start()
+                        }
+                    }
+                }
             }
 
             override fun onFailure(exception: IllegalConnectionException) {
@@ -79,8 +91,23 @@ class MessageAccessService: Service() {
         })
     }
 
+    fun initMessageRetrievalThread() = MessageRetrievalThread(
+        webSocketConnection.incomingMessagePipe,
+        object : MessageRetrievalThread.MessageRetrievalCallback {
+            override fun onReadMessage(envelope: Envelope?) {
+                envelope?.let {
+                    val number = remoteCallbackList.beginBroadcast()
+                    for (i in 0 until number) {
+                        remoteCallbackList.getBroadcastItem(i).onMessageReceived(envelope)
+                    }
+                    remoteCallbackList.finishBroadcast()
+                }
+            }
+        })
+
     companion object {
         var TAG = MessageAccessService::class.java.simpleName
+
         /** 操作类型-初始化连接 */
         const val ACTION_INITIALIZE_CONNECTION = "INITIALIZE_CONNECTION"
     }

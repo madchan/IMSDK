@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.IBinder
 import android.text.TextUtils
 import android.util.Log
+import com.madchan.imsdk.comp.base.SDKCache
 import com.madchan.imsdk.comp.base.util.ProcessUtil
 import com.madchan.imsdk.comp.remote.bean.Envelope
 import com.madchan.imsdk.comp.remote.listener.MessageReceiver
@@ -15,6 +16,9 @@ import com.madchan.imsdk.comp.remote.service.MessageAccessService
 import com.madchan.imsdk.comp.remote.work.WebSocketServerDiscoverWork
 import com.madchan.imsdk.lib.objects.bean.vo.MessageVO
 
+/**
+ * 消息接入服务提供者
+ */
 object MessageAccessServiceProvider {
 
     private var TAG = MessageAccessServiceProvider.javaClass.simpleName
@@ -37,9 +41,9 @@ object MessageAccessServiceProvider {
      * @param context   上下文
      */
     @Synchronized
-    fun setupService(context: Context? = null) {
+    fun setupService(context: Context) {
         if (!::appContext.isInitialized) {
-            appContext = context!!.applicationContext
+            appContext = context.applicationContext
         }
 
         val intent = Intent(appContext, MessageAccessService::class.java)
@@ -48,7 +52,7 @@ object MessageAccessServiceProvider {
         if (!isBound) {
             isBound = appContext.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         }
-
+        // 解绑服务后服务需要继续运行
         startService(intent)
     }
 
@@ -96,7 +100,8 @@ object MessageAccessServiceProvider {
     /** 接收远程服务器消息的接口 */
     private val messageReceiver = object : MessageReceiver.Stub() {
         override fun onMessageReceived(envelope: Envelope) {
-            Log.d(TAG, "收取消息: ${envelope?.messageVO?.content}")
+            Log.d(TAG, "Received a message : : ${envelope?.messageVO?.content}")
+
         }
     }
 
@@ -108,7 +113,7 @@ object MessageAccessServiceProvider {
             messageCarrier = null
 
             // 重连服务
-            setupService()
+            setupService(SDKCache.context)
         }
     }
 
