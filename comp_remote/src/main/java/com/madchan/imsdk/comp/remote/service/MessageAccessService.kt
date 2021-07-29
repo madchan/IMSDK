@@ -28,7 +28,6 @@ class MessageAccessService: Service() {
     private val webSocketConnection = WebSocketConnection()
     /** 消息检索线程 */
     private var messageRetrievalThread: MessageRetrievalThread? = null
-
     /** 专门用来管理多进程回调接口 */
     private val remoteCallbackList = RemoteCallbackList<MessageReceiver>()
 
@@ -107,7 +106,6 @@ class MessageAccessService: Service() {
 
     companion object {
         var TAG = MessageAccessService::class.java.simpleName
-
         /** 操作类型-初始化连接 */
         const val ACTION_INITIALIZE_CONNECTION = "INITIALIZE_CONNECTION"
     }

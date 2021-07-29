@@ -39,6 +39,7 @@ class WebSocketConnection : WebSocketListener() {
     /** WebSocket连接状态机订阅者 */
     private var stateMachineSubscriber = ConnectionStateMachineSubscriber()
 
+    /** 收到消息管道 */
     val incomingMessagePipe = IncomingMessagePipe()
 
     /**
@@ -53,7 +54,7 @@ class WebSocketConnection : WebSocketListener() {
 
         runBlocking {
             serverUrl = DataStoreUtil.readString(
-                SDKCache.dependentContext,
+                SDKCache.context,
                 RemoteDataStoreKey.WEB_SOCKET_SERVER_URL
             )
         }
@@ -105,6 +106,7 @@ class WebSocketConnection : WebSocketListener() {
         Log.d(MessageAccessService.TAG, "onMessage: ")
         Log.d(MessageAccessService.TAG, "Received a message : " + EnvelopeHelper.extract(MessageDTO.Message.parseFrom(bytes.toByteArray()))?.messageVO?.content)
 
+        // 消息二进制数据反序列化为消息数据传输对象，并添加至收到消息管道
         val messageDTO = MessageDTO.Message.parseFrom(bytes.toByteArray())
         incomingMessagePipe.enqueueMessage(messageDTO)
 
